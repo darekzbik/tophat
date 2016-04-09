@@ -14,12 +14,16 @@ Włączenie urządzenia
 
 Urządzenie Kobo z zainstalowanym oprogramowaniem TopHat włącza się tak jak oprogramowaniem czytnika książek. Pierwsza metoda
 polega na przesunięciu przełącznika znajdującego od góry obudowy. Przełącznik należy przesunąć na kila sekund w lewą stronę
-a następnie puścić. Drugą metodą włączenia urządzenia jest podłączenie ładowarki poprzez złącze USB. Niezależnie od sposobu włączenia proces uruchamiania oprogramowania sygnalizowany jest poprzez świecenie diody obok włącznika. Po uruchomieniu na
-ekranie urządzenia pojawią się ekran startowy zawierający wyrysowane przyciski sterujące dalszą pracą programu.
+a następnie puścić. Drugą metodą włączenia urządzenia jest podłączenie ładowarki poprzez złącze USB.
+Niezależnie od sposobu włączenia proces uruchamiania oprogramowania sygnalizowany jest poprzez świecenie diody obok włącznika.
+Po uruchomieniu na ekranie urządzenia pojawią się ekran startowy zawierający wyrysowane przyciski sterujące dalszą pracą programu.
 
  
-Powitalny ekran startowy pozwala wybrać tryb pracy urządzenia. Nieco poniżej środka ekranu znajdują się przyciski `FLY` oraz `SIM`. Pierwszy tryb przeznaczony jest do faktycznego lotu. W tym trybie odczytywana jest pozycja z odbiornika GPS oraz wykonywane są faktyczne obliczenia nawigacyjne. Drugi tryb oznaczony jako `SIM` przeznaczony jest do nauki posługiwania
-się nawigacją. W tym trybie program zamiast wczytywać faktyczne położenie z odbiornika GPS symuluje lot szybowca.
+Powitalny ekran startowy pozwala wybrać tryb pracy urządzenia. Nieco poniżej środka ekranu znajdują się przyciski
+`FLY` oraz `SIM`. Pierwszy tryb przeznaczony jest do faktycznego lotu. W tym trybie odczytywana jest pozycja z
+odbiornika GPS oraz wykonywane są faktyczne obliczenia nawigacyjne. Drugi tryb oznaczony jako `SIM` przeznaczony
+jest do nauki posługiwania się nawigacją. W tym trybie program zamiast wczytywać faktyczne położenie z odbiornika
+GPS symuluje lot szybowca.
 
 Wyłączenie urządzenia
 ---------------------
@@ -54,7 +58,8 @@ urządzenia, może to zająć około 1h.
 
 Konfiguracja GPS 
 ----------------
-Czytnik Kobo posiada wbudowany port szeregowy pozwalający na podłączenie odbiornika GPS lub elektronicznego wairometru. Operacja taka wymaga otwarcia obudowy oraz przylutowania wyprowadze w przygotowanym przez producenta urządzenia miejscu.
+Czytnik Kobo posiada wbudowany port szeregowy pozwalający na podłączenie odbiornika GPS lub elektronicznego
+wairometru. Operacja taka wymaga otwarcia obudowy oraz przylutowania wyprowadze w przygotowanym przez producenta urządzenia miejscu.
 Należy pamietać iż wbudowany port szeregowy działa przy napięciu 3.3V tak wiec wymagany jest konwerter poziomów napięć.
 
 Dodatkowo możliwe jest podłączenie GPS poprzez port USB za pomocą konwertera post szeregowy <-> USB. Kobo potrafi
@@ -64,7 +69,9 @@ taki kabel pozwala jednocześnie zasilać urządzenie podłączone do USB jak i 
 
 Do wyboru źródła można dojść po trzykrotnym naciśnięciu przycisku `M` a następnie wybraniu symbolu zębatki.
 
-Do konfiguracji urządzeń wejściowych wchodzi się poprzez wybranie `Device`. TopHat/XCSoar pozwala na pobieranie danych jednocześnie kilu urządzeń wejściowych.Lista wszystkich kanałów wejściowych widoczna jest na ekranie. Po wybraniu urządzenia możliwa jest jego konfiguracja po naciśnięciu przycisku `Edycja`. 
+Do konfiguracji urządzeń wejściowych wchodzi się poprzez wybranie `Device`. TopHat/XCSoar pozwala na
+pobieranie danych jednocześnie kilu urządzeń wejściowych.Lista wszystkich kanałów wejściowych widoczna
+jest na ekranie. Po wybraniu urządzenia możliwa jest jego konfiguracja po naciśnięciu przycisku `Edycja`. 
 
 _TopHat/XCSoar przyjmuje i przetwarza dane GPS tylko w trybie lotu (Fly). Żadne dane nie są wyświetlane gdy program działa
 w trybie sumulacji. Warto o tym pamietać podczas konfiguracji portów wejściowych._
@@ -86,7 +93,8 @@ dotyczące prędkości są takie same jak w przypadku wbudowanego portu szeregow
 Synchronizacja danych
 ---------------------
 
-Kobo TopHat umożliwia synchronizację danych z zewnętrznym komputerem. Istnieją dwie metody synchronizacji danych. Za pomocą pamięci USB lub poprzez bezpośrednie podłączenie do komputera. 
+Kobo TopHat umożliwia synchronizację danych z zewnętrznym komputerem. Istnieją dwie metody
+synchronizacji danych. Za pomocą pamięci USB lub poprzez bezpośrednie podłączenie do komputera. 
 
 ### Synchronizacja poprzez pamięć USB  
 
@@ -96,28 +104,56 @@ składające się z kilku przycisków pozwalających na wybranie kierunku przes�
 
 Dla potrzeb synchronizacji używany jest katalog o nazwie XCSoarData znajdujący się na podłączonym dysku USB.
 
-*Przesłanie lotów na pamięć USB* _Download flights to USB card_ - powoduje skopiowanie wszystkich zapisanych przez nawigację lotów do do podkatalogu `XCSaorData/logs`
+#### Przesłanie lotów na pamięć USB 
+_`Download flights to USB card`_ - powoduje skopiowanie wszystkich zapisanych przez nawigację lotów do do podkatalogu `XCSaorData/logs`
 
-*Przesłanie zadań do Kobo* _Upload tasks_ - powoduje skopiowania zadań z katalogu `XCSoarData/tasks`
+#### Przesłanie zadań do Kobo
+_`Upload tasks`_ - powoduje skopiowania zadań z katalogu `XCSoarData/tasks`
 do nawigacji TopHat.
   
-*Skopiowanie wszystkiego na pamięć USB* _Download everything to USB card_ - powoduje skopiowanie
+#### Skopiowanie wszystkiego na pamięć USB
+_`Download everything to USB card`_ - powoduje skopiowanie
 całej zawartości katalogów używanych przez TopHat Kobo do podłączonej pamięci USB. Obejmuje to
 również kopię plików konfiguracyjnych.
 
-*Wyczyść wewnętrzne katalogi urządzenia i skopiuj wszystko z pamięci USB* _Clean Kobo data directory and then upload everything to Kobo_ - czyści urządzenie i kopiuje pamięć USB do TopHat.
+#### Wyczyść wewnętrzne katalogi urządzenia i skopiuj wszystko z pamięci USB
+_`Clean Kobo data directory and then upload everything to Kobo`_ - czyści urządzenie i kopiuje pamięć USB do TopHat.
 
 
 ### Podłączenie do komputera
 
 Nawigację TopHat należy podłączyć do urządzenia poprzez kabel USB. Następnie należy wybrać z
 opcję `PC connect`. Stosowny przycisk znajduje się na po lewej stronie na dole. Po zatwierdzeniu
-ostrzeżeń urządzenie restartuje się i rozpoczyna działanie jako czytnik książek. Jeśli nie jest zarejestrowany wystarczy wybrać opcję `Don’t have WiFi network`. Po chwili w komputerze do którego jest podłączone jest Kobo powinien być widoczny dysk o nazwie `KOBOeReader`. Na dysku powinien być
+ostrzeżeń urządzenie restartuje się i rozpoczyna działanie jako czytnik książek. Jeśli nie jest
+zarejestrowany wystarczy wybrać opcję `Don’t have WiFi network`. Po chwili w komputerze do którego
+jest podłączone jest Kobo powinien być widoczny dysk o nazwie `KOBOeReader`. Na dysku powinien być
 widoczny katalog XCSoarData zawierający wewnętrzne pliki nawigacyjne.
 
 
 Uaktualnienie oprogramowania
 ----------------------------
 
-_Upgrade Top Hat_
+Do wykonania uaktualnienia oprogramowania należy podłączyć do urządzenia dysk USB podobnie jak 
+w przypadku transferu plików opisanego powyżej. Na dysku USB należy mieścić nową wersję 
+instalacyjną `KoboRoot.tgz` w główmy katalogu dysku. Po podłączeniu dysku USB nawigacja
+sprawdzi istnienie pliku i oprócz operacji sychronizacji plików pojawi się przycisk
+_`Upgrade Top Hat`_ pozwalający na uaktualnienie oprogramowania.
 
+
+Procedury awaryjne - reboot Kobo
+--------------------------------
+
+W przypadku problemu z nawigacją możliwe jest zrestartowania nawigacji. Procedura jest następująca:
+- przesunąć przycisk znajdujący się w górnej części obudowy w prawą stronę, odczekać 10 sekund, zwolnić przycisk
+- odczekać kolejne 10 sekund
+- przesunąć ponownie przycisk w prawo i zaczekać 2 sekundy a następnie znów zwolnić przycisk
+
+Jeśli bateria jest naładowana Kobo powinno uruchomić się od nowa. 
+
+Dodatkowo w tylnej części obudowy Kobo znajduje się dodatkowy, mechaniczny przycisk _`reset`_. 
+Aby się do niego dostać trzeba zdjąć pierwszą część obudowy. W tym celu 'plecy' urządzenia można
+podważyć zaczynając od prawego górnego rogu. To właśnie dlatego w prawym górnym rogu jest nieco
+wycięty róg obudowy. Do przycisku _`reset`_ można się dostać poprzez niewielki otwór okrągły otwór
+o średnicy około 1mm. Aby przycisnąć przycisk trzeba posłużyć się np. spinaczem biurowym lub innym
+podobnym drutem. Pozostałe otwory w drugiej części tylnej pokrywy to otwory zawierające śruby oraz
+inne technologiczne otwory o kształcie prostokątnym. 
