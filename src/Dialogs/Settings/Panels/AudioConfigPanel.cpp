@@ -27,9 +27,11 @@ Copyright_License {
 #include "Interface.hpp"
 #include "Widget/RowFormWidget.hpp"
 #include "Audio/Sound.hpp"
+#include "Audio/Settings.hpp"
 
 enum ControlIndex {
-  ALSAVolumeControl
+  ALSAVolumeControl,
+  AudioTest
 };
 
 void
@@ -43,13 +45,39 @@ AudioConfigPanel::Prepare(ContainerWindow &parent, const PixelRect &rc)
       _("Sound volume"),
       _("Volume of sound card connected to your system. For KOBO it is usually UBS audio card. "
         "Volume value can be set between 5% and 100%"),
-      _T("%d"), _T("%d"), 5, 100, 5, sound_settings.volume);
+      _T("%d"), _T("%d"), 5, 100, 5, sound_settings.volume, this);
 
   if (w != nullptr) {
     w->SetEnabled(HasVolumeControl());
   }
 
+  AddButton(_T("Test Sound"), *this, AudioTest);
+
   SetExpertRow(ALSAVolumeControl);
+}
+
+void
+AudioConfigPanel::OnAction(int id) {
+  if (id == AudioTest) {
+    UpdateSoundConfig();
+    PlayResource(_T("IDR_WAV_TRAFFIC_URGENT"));
+  }
+}
+
+void
+AudioConfigPanel::OnModified(DataField &df)
+{
+  if (IsDataField(ALSAVolumeControl, df)) {
+    OnAction(AudioTest);
+  }
+}
+
+void
+AudioConfigPanel::UpdateSoundConfig() {
+  SoundSettings tmp_settings = CommonInterface::SetUISettings().sound;
+
+  tmp_settings.volume = GetValueInteger(ALSAVolumeControl);;
+  ConfigureSoundDevice(tmp_settings);
 }
 
 bool
