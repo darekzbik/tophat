@@ -22,6 +22,7 @@ Copyright_License {
 */
 
 #include "Audio/Sound.hpp"
+#include "Audio/Features.hpp"
 
 #ifdef ANDROID
 #include "Android/Main.hpp"
@@ -37,7 +38,7 @@ Copyright_License {
 #include <mmsystem.h>
 #endif
 
-#if !defined(ANDROID) && !(defined(WIN32) && !defined(GNAV))
+#if defined(HAVE_RAW_PLAY)
 #include "Audio/raw_play.hpp"
 #include "Util/StringUtil.hpp"
 #include "Util/StaticString.hxx"
@@ -59,6 +60,7 @@ bool PlayResourceNow(const SoundQueue::SoundName resource_name)
          sndPlaySound((LPCTSTR)data.data,
                       SND_MEMORY | SND_SYNC | SND_NODEFAULT);
 #else
+#if defined(HAVE_RAW_PLAY)
   // Linux, Kobo
   SoundQueue::SoundName resource_name2(resource_name);
   const TCHAR *resource_name_pointer = resource_name2.buffer();
@@ -84,6 +86,8 @@ bool PlayResourceNow(const SoundQueue::SoundName resource_name)
 
   return true;
 #endif
+  return false;
+#endif
 }
 #endif
 
@@ -96,5 +100,21 @@ PlayResource(const TCHAR *resource_name)
   SoundQueue::SoundName sound_name(resource_name);
   SoundQueue::Enqueue(sound_name);
   return true;
+#endif
+}
+
+void ConfigureSoundDevice(const SoundSettings &sound_settings)
+{
+#ifdef HAVE_RAW_PLAY
+  RawPlayback::setAlsaMasterVolume(sound_settings.volume);
+#endif
+}
+
+bool HasVolumeControl()
+{
+#ifdef HAVE_RAW_PLAY
+  return RawPlayback::HasAlsaMasterVolume();
+#else
+  return false;
 #endif
 }

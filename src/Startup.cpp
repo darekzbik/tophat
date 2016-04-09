@@ -104,6 +104,7 @@ Copyright_License {
 #if !defined(ANDROID)
 #include "Audio/SoundQueue.hpp"
 #endif
+#include "Audio/Sound.hpp"
 
 #ifdef ENABLE_OPENGL
 #include "Screen/OpenGL/Globals.hpp"
@@ -311,6 +312,7 @@ Startup()
     return false;
 
   operation.SetText(_("Initialising"));
+  ConfigureSoundDevice(ui_settings.sound);
 
   /* create XCSoarData on the first start */
   CreateDataPath();
