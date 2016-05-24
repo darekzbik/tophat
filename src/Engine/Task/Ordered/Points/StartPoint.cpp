@@ -31,8 +31,9 @@
 StartPoint::StartPoint(ObservationZonePoint *_oz,
                        const Waypoint &wp,
                        const TaskBehaviour &tb,
-                       const StartConstraints &_constraints)
-  :OrderedTaskPoint(TaskPointType::START, _oz, wp, false),
+                       const StartConstraints &_constraints,
+                       bool boundary_scored)
+  :OrderedTaskPoint(TaskPointType::START, _oz, wp, boundary_scored),
    safety_height(tb.safety_height_arrival),
    margins(tb.start_margins),
    constraints(_constraints)
@@ -67,12 +68,20 @@ StartPoint::SetNeighbours(OrderedTaskPoint *_prev, OrderedTaskPoint *_next)
   OrderedTaskPoint::SetNeighbours(_prev, _next);
 }
 
+fixed
+StartPoint::ScoreAdjustment() const
+{
+  if (IsBoundaryScored())
+    return fixed(0);
+  else
+    // return the cylinder radius
+    return ObservationZoneClient::ScoreAdjustment();
+}
 
 void
 StartPoint::find_best_start(const AircraftState &state,
                             const OrderedTaskPoint &next,
-                            const FlatProjection &projection,
-                            bool subtract_start_radius)
+                            const FlatProjection &projection)
 {
   /* check which boundary point results in the smallest distance to
      fly */
@@ -80,7 +89,8 @@ StartPoint::find_best_start(const AircraftState &state,
   const GeoPoint &next_location = next.GetLocationRemaining();
   AircraftState new_state = state;
 
-  if (subtract_start_radius) {
+  //FAI
+  if (positive(ScoreAdjustment())) {
     const OZBoundary boundary = GetBoundary();
     assert(!boundary.empty());
 

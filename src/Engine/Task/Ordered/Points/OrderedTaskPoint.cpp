@@ -159,13 +159,14 @@ OrderedTaskPoint::Clone(const TaskBehaviour &task_behaviour,
   case TaskPointType::START:
     return new StartPoint(GetObservationZone().Clone(waypoint->location),
                           *waypoint, task_behaviour,
-                          ordered_task_settings.start_constraints);
+                          ordered_task_settings.start_constraints,
+                          IsBoundaryScored());
 
   case TaskPointType::AST: {
     const ASTPoint &src = *(const ASTPoint *)this;
     ASTPoint *dest = new
         ASTPoint(GetObservationZone().Clone(waypoint->location),
-                 *waypoint, task_behaviour, IsBoundaryScored());
+                 *waypoint, task_behaviour);
     dest->SetScoreExit(src.GetScoreExit());
     tp_temp = (OrderedTaskPoint*)dest;
     break;
