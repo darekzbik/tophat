@@ -46,8 +46,14 @@ UnorderedTaskPoint::GetVectorRemaining(const GeoPoint &reference) const
   return GeoVector(reference, GetLocationRemaining());
 }
 
+fixed
+UnorderedTaskPoint::GetRequiredElevation(fixed safety_limit) const
+{
+  return GetBaseElevation() + safety_limit;
+}
+
 fixed 
 UnorderedTaskPoint::GetElevation() const
 {
-  return GetBaseElevation() + safety_height_arrival;
+  return UnorderedTaskPoint::GetRequiredElevation(safety_height_arrival);
 }

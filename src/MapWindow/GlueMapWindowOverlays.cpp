@@ -250,7 +250,8 @@ GlueMapWindow::DrawTaskNavSliderShape(Canvas &canvas)
                     altitude_difference_valid,
                     bearing,
                     bearing_valid,
-                    ::AngleToGradient(result2.DestinationAngleGround()),
+                    ::AngleToGradient(result2.DestinationAngleWithGRSafety
+                                      (CommonInterface::GetComputerSettings().task.safety_height_arrival_gr)),
                     result2.IsOk(),
                     use_wide_pen);
 }

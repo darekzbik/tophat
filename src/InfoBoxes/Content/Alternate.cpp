@@ -137,9 +137,10 @@ InfoBoxContentAlternateGR::Update(InfoBoxData &data)
 
   data.SetComment(alternate->waypoint.name.c_str());
 
+  //TODO - this solution still has internal altitude safety limit - more changes around
+  // solution is required
   fixed gradient =
-    ::AngleToGradient(alternate->solution.DestinationAngleGround());
-
+    ::AngleToGradient(alternate->solution.DestinationAngleWithGRSafety(CommonInterface::GetComputerSettings().task.safety_height_arrival_gr));
   if (negative(gradient)) {
     data.SetValueColor(0);
     data.SetValue(_T("+++"));
