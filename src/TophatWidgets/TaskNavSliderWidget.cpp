@@ -188,6 +188,9 @@ TaskNavSliderWidget::OnPaintItem(Canvas &canvas, const PixelRect rc_outer,
   bool has_entered = tp_valid && is_ordered && otp->HasEntered();
   bool has_exited = tp_valid && is_ordered && otp->HasExited();
 
+  fixed gradient = ::CalculateGradient(*twp, result.vector.distance,
+                                       basic, settings.task.safety_height_arrival_gr);
+
   slider_shape.Draw(canvas, rc_outer,
                     idx, GetList().GetCursorDownIndex() == (int)idx,
                     idx == waypoint_index,
@@ -204,7 +207,7 @@ TaskNavSliderWidget::OnPaintItem(Canvas &canvas, const PixelRect rc_outer,
                     basic.NavAltitudeAvailable() && (result.IsOk() || result.vector.distance < fixed(0.01)),
                     result.vector.bearing - basic.track,
                     basic.location_available && result.vector.IsValid(),
-                    ::AngleToGradient(result.DestinationAngleWithGRSafety(settings.task.safety_height_arrival_gr)),
+                    gradient,
                     result.IsOk(),
                     use_wide_pen);
 }

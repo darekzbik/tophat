@@ -24,6 +24,8 @@
 
 #include "Math/fixed.hpp"
 #include "Compiler.h"
+#include "Waypoint/Waypoint.hpp"
+#include "NMEA/MoreData.hpp"
 
 /** 
  * Convert angle or (approximate) inverse-gradient to gradient.
@@ -48,5 +50,24 @@ AngleToGradient(const fixed d);
 gcc_const
 bool
 GradientValid(const fixed d);
+
+/**
+ * TODO: comment it
+ * @param distance - distance specified over other TPs
+ */
+gcc_const
+fixed
+CalculateGradient(const Waypoint &destination, fixed distance,
+                  const MoreData &basic, fixed safety_height);
+
+
+/**
+ * TODO: comment it
+ * direct to the point
+ */
+gcc_const
+fixed
+CalculateGradient(const Waypoint &destination,
+                  const MoreData &basic, fixed safety_height);
 
 #endif

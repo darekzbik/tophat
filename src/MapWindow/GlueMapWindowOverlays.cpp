@@ -238,6 +238,9 @@ GlueMapWindow::DrawTaskNavSliderShape(Canvas &canvas)
       (outer_rect.right - outer_rect.left)) / 2;
   outer_rect.Offset(x_offset, 0);
 
+  fixed gradient = ::CalculateGradient(wp, result2.vector.distance,
+                                       Basic(), CommonInterface::GetComputerSettings().task.safety_height_arrival_gr);
+
   slider_shape.Draw(canvas, outer_rect,
                     idx, false, false,
                     wp_name.c_str(),
@@ -250,8 +253,7 @@ GlueMapWindow::DrawTaskNavSliderShape(Canvas &canvas)
                     altitude_difference_valid,
                     bearing,
                     bearing_valid,
-                    ::AngleToGradient(result2.DestinationAngleWithGRSafety
-                                      (CommonInterface::GetComputerSettings().task.safety_height_arrival_gr)),
+                    gradient,
                     result2.IsOk(),
                     use_wide_pen);
 }
