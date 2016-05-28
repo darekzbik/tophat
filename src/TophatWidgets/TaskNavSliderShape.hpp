@@ -28,6 +28,7 @@ Copyright_License {
 #include "Math/fixed.hpp"
 #include "Engine/Task/TaskManager.hpp"
 #include "UIGlobals.hpp"
+#include "Interface.hpp"
 #include "Look/Look.hpp"
 #include "Engine/Task/Factory/TaskFactoryType.hpp"
 
@@ -41,6 +42,15 @@ class Canvas;
 enum class TaskType : uint8_t;
 
 class SliderShape {
+public:
+  // Direction of bearing to be drawn
+  enum BearingDirection {
+    Left,
+    Right,
+    // no bearing
+    None
+  };
+
 private:
   /**
    * how much of the shape is visible in the canvas
@@ -69,6 +79,7 @@ protected:
 
   const DialogLook &dialog_look;
   const NavSliderLook &nav_slider_look;
+  const UISettings &ui_settings;
 
   /**
    * height of the bearing icon
@@ -87,6 +98,7 @@ public:
   SliderShape()
   :dialog_look(UIGlobals::GetDialogLook()),
    nav_slider_look(UIGlobals::GetLook().nav_slider),
+   ui_settings(CommonInterface::GetUISettings()),
    bearing_icon_hor_margin(0) {
     const IconLook &icon_look = UIGlobals::GetIconLook();
     const MaskedIcon *bmp_bearing;
@@ -97,11 +109,9 @@ public:
   /**
    * Draws bearing symbol
    * returns direction bearing symbol.
-   *   -1 if to left, +1 if to right
-   *   or 0 if no bearing is drawn
    */
-  int DrawBearing(Canvas &canvas, const PixelRect &rc_outer,
-                   const Angle &bearing);
+  unsigned DrawBearing(Canvas &canvas, const PixelRect &rc_outer,
+                               const Angle &bearing);
 
   UPixelScalar GetWidth() const {
     return points[2].x - points[6].x;
@@ -212,6 +222,9 @@ public:
    */
   bool DrawOutline(Canvas &canvas, const PixelRect &rc, bool use_wide_pen);
 
+  void DrawInvalid(Canvas &canvas, const PixelRect rc_outer, const PixelRect rc,
+                   unsigned idx,
+                   bool selected, bool use_wide_pen);
   /**
    * Draws the text and the outline of the shape
    * @param rc_outer. rc of list item.  This may not be visible in the canvas
@@ -229,7 +242,8 @@ public:
             bool bearing_valid,
             fixed gr_value,
             bool gr_valid,
-            bool use_wide_pen);
+            bool use_wide_pen,
+            bool navigate_to_target);
 
 #ifdef _WIN32
   /**

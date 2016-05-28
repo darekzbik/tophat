@@ -119,6 +119,7 @@ DIALOG_SOURCES = \
 	$(SRC)/Dialogs/Settings/Panels/WaypointDisplayConfigPanel.cpp \
 	$(SRC)/Dialogs/Settings/Panels/TrackingConfigPanel.cpp \
 	$(SRC)/Dialogs/Settings/Panels/AudioConfigPanel.cpp \
+	$(SRC)/Dialogs/Settings/Panels/NavBarConfigPanel.cpp \
 	\
 	$(SRC)/Dialogs/Task/Widgets/ObservationZoneEditWidget.cpp \
 	$(SRC)/Dialogs/Task/Widgets/CylinderZoneEditWidget.cpp \
@@ -136,7 +137,7 @@ DIALOG_SOURCES = \
 	$(SRC)/Dialogs/Task/Manager/TaskListPanel.cpp \
 	$(SRC)/Dialogs/Task/OptionalStartsDialog.cpp \
 	$(SRC)/Dialogs/Task/TaskPointDialog.cpp \
-	$(SRC)/Dialogs/Task/TaskEditorDialog.cpp \
+	$(SRC)/Dialogs/Task/TaskEditorDialogUs.cpp \
 	$(SRC)/Dialogs/Task/TaskPropertiesDialogUs.cpp \
 	$(SRC)/Dialogs/Task/TaskListDialogUs.cpp \
 	$(SRC)/Dialogs/Task/TaskManagerDialogUs.cpp \

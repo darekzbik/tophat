@@ -46,6 +46,7 @@ extern const char WaypointLabelSelection[];
 extern const char WaypointLabelStyle[];
 extern const char WeatherStations[];
 extern const char SafetyAltitudeArrival[];
+extern const char SafetyAltitudeArrivalGR[];
 extern const char SafetyAltitudeTerrain[];
 extern const char SafteySpeed[];
 extern const char DryMass[];
@@ -285,6 +286,11 @@ extern const char WaypointSortDirection[];
 extern const char WaveAssistant[];
 
 extern const char SystemSoundVolume [];
+
+extern const char NavBarDisplayGR [];
+extern const char NavBarDisplayTpIndex [];
+extern const char NavBarDisplayAATMinimumDistance [];
+extern const char NavBarNavigateToAATTarget [];
 }
 
 #endif

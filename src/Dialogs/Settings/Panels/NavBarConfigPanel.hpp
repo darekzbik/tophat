@@ -1,7 +1,8 @@
-/* Copyright_License {
+/*
+Copyright_License {
 
   XCSoar Glide Computer - http://www.xcsoar.org/
-  Copyright (C) 2000-2015 The XCSoar Project
+  Copyright (C) 2000-2016 The XCSoar Project
   A detailed list of copyright holders can be found in the file "AUTHORS".
 
   This program is free software; you can redistribute it and/or
@@ -18,16 +19,28 @@
   along with this program; if not, write to the Free Software
   Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 }
- */
+*/
 
-#include "ASTPoint.hpp"
+#ifndef NAVBARCONFIGPANEL_HPP
+#define NAVBARCONFIGPANEL_HPP
 
-bool
-ASTPoint::Equals(const OrderedTaskPoint &_other) const
-{
-  const ASTPoint &other = (const ASTPoint &)_other;
+#include "Widget/RowFormWidget.hpp"
+#include "UIGlobals.hpp"
 
-  return IntermediateTaskPoint::Equals(_other) &&
-    other.GetScoreExit() == GetScoreExit() &&
-    other.IsBoundaryScored() == IsBoundaryScored();
-}
+class NavBarConfigPanel final : public RowFormWidget {
+protected:
+
+public:
+  NavBarConfigPanel()
+    :RowFormWidget(UIGlobals::GetDialogLook()) {}
+
+public:
+  /* methods from Widget */
+  virtual void Prepare(ContainerWindow &parent, const PixelRect &rc) override;
+  virtual bool Save(bool &changed) override;
+};
+
+Widget *
+CreateNavBarConfigPanel();
+
+#endif

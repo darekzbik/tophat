@@ -76,6 +76,7 @@ const char PolarName[] = "PolarName";
 const char PolarDegradation[] = "PolarDegradation";
 const char AutoBugs[] = "AutoBugs";
 const char SafetyAltitudeArrival[] = "SafetyAltitudeArrival";
+const char SafetyAltitudeArrivalGR[] = "SafetyAltitudeArrivalGR";
 const char SafetyAltitudeTerrain[] = "SafetyAltitudeTerrain";
 const char SafteySpeed[] = "SafteySpeed";
 const char DryMass[] = "DryMass";
@@ -288,4 +289,9 @@ const char WaypointSortDirection[] = "WaypointSortDirection";
 const char WaveAssistant[] = "WaveAssistant";
 
 const char SystemSoundVolume [] = "SystemSoundVolume";
+
+const char NavBarDisplayGR [] = "NavBarDisplayGR";
+const char NavBarDisplayTpIndex [] = "NavBarDisplayTpIndex";
+const char NavBarDisplayAATMinimumDistance [] = "NavBarDisplayAATMinimumDistance";
+const char NavBarNavigateToAATTarget [] = "NavBarNavigateToAATTarget";
 }

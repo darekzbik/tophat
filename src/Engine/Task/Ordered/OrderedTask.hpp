@@ -238,7 +238,7 @@ public:
    * distance calculation
    */
   gcc_pure
-  bool SubtractStartRadius() const;
+  bool ScoredAdjustmentStart() const;
 
   /**
    * Insert taskpoint before specified index in task.  May fail if the candidate
@@ -485,6 +485,8 @@ private:
 
   /**
    * @return true if a solution was found (and applied)
+   * Updates search point max for each tp in task
+   * Updates search point achieved for prior tps in task
    */
   bool RunDijsktraMax();
 

@@ -278,7 +278,7 @@ static constexpr MetaData meta_data[] = {
   {
     N_("MacCready setting"),
     N_("MC"),
-    N_("The current MacCready setting and the current MacCready mode (manual or auto). (Touch-screen/PC only) Also used to adjust the MacCready setting if the InfoBox is active, by using the up/down cursor keys."),
+    N_("The current MacCready setting and the current MacCready mode. Also the inter-thermal speed-to-fly.  Auto MC will set it to your thermal rate of climb."),
     IBFHelper<InfoBoxContentMacCready>::Create,
     e_WP_Speed_MC, // V MC
     NextLegEqThermal,
@@ -356,9 +356,9 @@ static constexpr MetaData meta_data[] = {
 
   // e_SpeedTaskAvg
   {
-    N_("Speed task average"),
-    N_("V Task Avg"),
-    N_("Average cross country speed while on current task, not compensated for altitude."),
+    N_("Speed on task"),
+    N_("V Task"),
+    N_("Average speed while on current task, not compensated for altitude."),
     UpdateInfoBoxTaskSpeed,
     e_CC_SpeedInst, // V Task Inst
     e_Fin_AltReq, // Fin AltR

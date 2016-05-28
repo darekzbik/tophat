@@ -26,6 +26,7 @@
 #include "Points/OrderedTaskPoint.hpp"
 #include "Points/StartPoint.hpp"
 #include "Points/FinishPoint.hpp"
+#include "Points/AATPoint.hpp"
 #include "Task/Solvers/TaskMacCreadyTravelled.hpp"
 #include "Task/Solvers/TaskMacCreadyRemaining.hpp"
 #include "Task/Solvers/TaskMacCreadyTotal.hpp"
@@ -225,31 +226,18 @@ OrderedTask::ScanLegStartTime()
 
 // DISTANCES
 
+/**
+ * @return true for FAI and non-US tasks.  False for US AT, TAT, MAT
+ */
 inline bool
-OrderedTask::SubtractStartRadius() const {
+OrderedTask::ScoredAdjustmentStart() const {
   if (taskpoint_start == nullptr)
     return false;
 
   if (!taskpoint_start->HasEntered())
-    return true;
+    return false;
 
-  switch (GetFactoryType()) {
-  case TaskFactoryType::FAI_GENERAL:
-  case TaskFactoryType::FAI_TRIANGLE:
-  case TaskFactoryType::FAI_OR:
-  case TaskFactoryType::FAI_GOAL:
-    return true;
-
-  case TaskFactoryType::MIXED:
-  case TaskFactoryType::TOURING:
-  case TaskFactoryType::COUNT:
-
-  case TaskFactoryType::RACING:
-  case TaskFactoryType::AAT:
-  case TaskFactoryType::MAT:
-    return task_behaviour.contest_nationality != ContestNationalities::AMERICAN;
-  }
-  return false;
+  return !taskpoint_start->IsBoundaryScored();
 }
 
 inline bool
@@ -264,7 +252,7 @@ OrderedTask::RunDijsktraMin(const GeoPoint &location)
   TaskDijkstraMin &dijkstra = *dijkstra_min;
 
   // only let Dijstra set min for start if we're subtracting start radius
-  const unsigned active_index = std::max((SubtractStartRadius() ? 0u : 1u),
+  const unsigned active_index = std::max((ScoredAdjustmentStart() ? 0u : 1u),
                                          GetActiveIndex());
   dijkstra.SetTaskSize(task_size - active_index);
   for (unsigned i = active_index; i != task_size; ++i) {
@@ -338,7 +326,7 @@ OrderedTask::RunDijsktraMax()
   }
 
   fixed start_radius(-1), finish_radius(-1);
-  if (SubtractStartRadius()) {
+  if (ScoredAdjustmentStart()) {
     const auto &start = *task_points.front();
     start_radius = GetCylinderRadiusOrMinusOne(start);
     if (positive(start_radius))
@@ -380,7 +368,7 @@ OrderedTask::RunDijsktraMax()
 
     SetPointSearchMax(i, solution);
     // only do this for start if we're subtracting the start radius
-    if (i <= active_index && ((i > 0) || SubtractStartRadius()))
+    if (i <= active_index && ((i > 0) || ScoredAdjustmentStart()))
       set_tp_search_achieved(i, solution);
   }
 
@@ -564,8 +552,7 @@ OrderedTask::CheckTransitions(const AircraftState &state,
 
   if (stats.start.task_started && !last_started) {
     /* calculates location of start and updates samples, and state_entered */
-    taskpoint_start->find_best_start(state, *task_points[1], task_projection,
-                                     SubtractStartRadius());
+    taskpoint_start->find_best_start(state, *task_points[1], task_projection);
 
     const AircraftState start_state = taskpoint_start->GetEnteredState();
     stats.start.SetStarted(start_state);
@@ -637,7 +624,7 @@ void
 OrderedTask::SavedStartRestore()
 {
   taskpoint_start->find_best_start(saved_start_state_pushed, *task_points[1],
-                                   task_projection, SubtractStartRadius());
+                                   task_projection);
   stats.start.SetStarted(saved_start_state_pushed);
   taskpoint_finish->set_fai_finish_height(saved_start_state_pushed.altitude - fixed(1000));
 

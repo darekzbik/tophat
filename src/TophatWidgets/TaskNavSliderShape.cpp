@@ -220,6 +220,31 @@ SliderShape::PaintBackground(Canvas &canvas, unsigned idx,
 #endif
 
 void
+SliderShape::DrawInvalid(Canvas &canvas, const PixelRect rc_outer,
+                         const PixelRect rc, unsigned idx,
+                         bool selected, bool use_wide_pen)
+{
+  StaticString<120> nav_buffer;
+  const Font &nav_font = nav_slider_look.medium_font;
+  canvas.SetTextColor(dialog_look.list.GetTextColor(selected, true, false));
+  canvas.Select(nav_slider_look.GetBackgroundBrush(selected));
+  DrawOutline(canvas, rc_outer, use_wide_pen);
+  canvas.Select(nav_font);
+  nav_buffer = _("Click to navigate");
+  unsigned width = canvas.CalcTextWidth(nav_buffer.c_str());
+  int left = rc.left + (rc.right - rc.left - width) / 2;
+  if (left > 0)
+    canvas.TextAutoClipped(left,
+                           rc.top + (rc.bottom - rc.top -
+                               nav_font.GetHeight()) / 2,
+                               nav_buffer.c_str());
+#ifdef _WIN32
+  if (HasDraggableScreen()) // PC or WM
+    PaintBackground(canvas, idx, 1, dialog_look, rc_outer);
+#endif
+}
+
+void
 SliderShape::Draw(Canvas &canvas, const PixelRect rc_outer,
                   unsigned idx, bool selected, bool is_current_tp,
                   const TCHAR *tp_name, bool has_entered, bool has_exited,
@@ -232,7 +257,8 @@ SliderShape::Draw(Canvas &canvas, const PixelRect rc_outer,
                   bool bearing_valid,
                   fixed gr_value,
                   bool gr_valid,
-                  bool use_wide_pen)
+                  bool use_wide_pen,
+                  bool navigate_to_target)
 {
   const DialogLook &dialog_look = UIGlobals::GetDialogLook();
   const IconLook &icon_look = UIGlobals::GetIconLook();
@@ -242,6 +268,7 @@ SliderShape::Draw(Canvas &canvas, const PixelRect rc_outer,
       && ((idx > 0 && has_entered) || (idx == 0 && has_exited));
 
   StaticString<120> type_buffer;
+
   const Font &name_font = nav_slider_look.large_font;
   const Font &distance_font = nav_slider_look.medium_font;
   const Font &type_font = nav_slider_look.small_font;
@@ -253,24 +280,7 @@ SliderShape::Draw(Canvas &canvas, const PixelRect rc_outer,
   rc.right -= 3 * GetHintWidth() / 2;
 
   if (!tp_valid) {
-    StaticString<120> nav_buffer;
-    const Font &nav_font = nav_slider_look.medium_font;
-    canvas.SetTextColor(dialog_look.list.GetTextColor(selected, true, false));
-    canvas.Select(nav_slider_look.GetBackgroundBrush(selected));
-    DrawOutline(canvas, rc_outer, use_wide_pen);
-    canvas.Select(nav_font);
-    nav_buffer = _("Click to navigate");
-    width = canvas.CalcTextWidth(nav_buffer.c_str());
-    left = rc.left + (rc.right - rc.left - width) / 2;
-    if (left > 0)
-      canvas.TextAutoClipped(left,
-                             rc.top + (rc.bottom - rc.top -
-                                 nav_font.GetHeight()) / 2,
-                                 nav_buffer.c_str());
-#ifdef _WIN32
-    if (HasDraggableScreen()) // PC or WM
-      PaintBackground(canvas, idx, 1, dialog_look, rc_outer);
-#endif
+    DrawInvalid(canvas, rc_outer, rc, idx, selected, use_wide_pen);
     return;
   }
 
@@ -305,6 +315,9 @@ SliderShape::Draw(Canvas &canvas, const PixelRect rc_outer,
       type_buffer = _("Start");
     else if (idx + 1 == task_size)
       type_buffer = _("Finish");
+    else if (task_factory_type ==  TaskFactoryType::AAT && navigate_to_target)
+      // append "Target" text to distance in center
+      type_buffer.clear();
     else if (task_factory_type ==  TaskFactoryType::AAT)
       _stprintf(type_buffer.buffer(), _T("%s %u"), _("Center"), idx);
     else
@@ -338,7 +351,7 @@ SliderShape::Draw(Canvas &canvas, const PixelRect rc_outer,
 
   // bearing chevrons for ordered when not start
   // or for non ordered task
-  int bearing_direction = 0; // directiong of bearing if drawn
+  BearingDirection bearing_direction = BearingDirection::None;
   bool do_bearing = false;
   Angle bearing;
   if (is_current_tp && bearing_valid && task_mode ==
@@ -353,11 +366,21 @@ SliderShape::Draw(Canvas &canvas, const PixelRect rc_outer,
 
   // draw distance centered between label and altitude.
   // draw label if room
+  StaticString<30> distance_only_buffer(_T(""));
+
   if (distance_valid) {
-    FormatUserDistance(tp_distance, distance_buffer.buffer(), true, 1);
+    FormatUserDistance(tp_distance, distance_only_buffer.buffer(), true, 1);
   }
 
-  if (gr_valid) {
+  distance_buffer.clear();
+  if (navigate_to_target &&
+      task_size > 0 &&
+      idx != 0 &&
+      (idx + 1 != task_size)) {
+    distance_buffer.Format(_T("%s: "), _("Target"));
+  }
+  distance_buffer.append(distance_only_buffer.c_str());
+  if (gr_valid && ui_settings.navbar_enable_gr) {
     if (gr_value <= fixed(0)) {
       distance_buffer.append(_T(" [##]"));
     }
@@ -371,7 +394,7 @@ SliderShape::Draw(Canvas &canvas, const PixelRect rc_outer,
     }
   }
 
-  if (distance_valid || gr_valid) {
+  if (distance_valid || (gr_valid && ui_settings.navbar_enable_gr) ) {
     canvas.Select(distance_font);
     distance_width = canvas.CalcTextWidth(distance_buffer.c_str());
 
@@ -381,11 +404,10 @@ SliderShape::Draw(Canvas &canvas, const PixelRect rc_outer,
             Layout::FastScale(15))) {
       canvas.Select(type_font);
       left = rc.left;
-      if (left > 0)
+      if (left > 0 && ui_settings.navbar_enable_tp_index)
         canvas.TextAutoClipped(left, line_one_y_offset, type_buffer.c_str());
-      offset = rc.left + label_width +
-          (rc.right - rc.left - distance_width - height_width
-              - label_width) / 2;
+      offset = rc.left +
+          (rc.right - rc.left - distance_width) / 2;
 
     }
 
@@ -395,10 +417,14 @@ SliderShape::Draw(Canvas &canvas, const PixelRect rc_outer,
       canvas.TextAutoClipped(left, line_one_y_offset, distance_buffer.c_str());
 
     if (do_bearing)
-      bearing_direction = DrawBearing(canvas, rc_outer,bearing);
+      bearing_direction = (BearingDirection)DrawBearing(canvas, rc_outer,bearing);
 
-  } else // just type type label
-    canvas.TextAutoClipped(rc.left, line_one_y_offset, type_buffer.c_str());
+  }
+  else { // just type type label
+    if (ui_settings.navbar_enable_tp_index) {
+      canvas.TextAutoClipped(rc.left, line_one_y_offset, type_buffer.c_str());
+    }
+  }
 
   // Draw tp name, truncated to leave space before rt. bearing if drawn
   canvas.Select(name_font);
@@ -414,9 +440,9 @@ SliderShape::Draw(Canvas &canvas, const PixelRect rc_outer,
   width = canvas.CalcTextWidth(tp_name) + icon_size.cx;
 
   if ((PixelScalar)width > (rc_name.right - rc_name.left)) {
-    if (is_current_tp && bearing_direction != 1)
+    if (is_current_tp && bearing_direction != BearingDirection::Right)
         rc_name.right += GetHintWidth() / 2;
-    if (is_current_tp && bearing_direction == 1)
+    if (is_current_tp && bearing_direction == BearingDirection::Right)
         rc_name.right -= Layout::Scale(5);
 
     left_icon = rc_name.left;
@@ -442,11 +468,10 @@ SliderShape::Draw(Canvas &canvas, const PixelRect rc_outer,
     if (canvas.GetRect().IsInside(upper_left) && canvas.GetRect().IsInside(lower_right)) {
       icon->DrawUpperLeft(canvas, upper_left); // draws from center of icon
     }
-
   }
 }
 
-int
+unsigned
 SliderShape::DrawBearing(Canvas &canvas, const PixelRect &rc_outer, const Angle &bearing)
 {
   enum bearing_levels {
@@ -457,7 +482,7 @@ SliderShape::DrawBearing(Canvas &canvas, const PixelRect &rc_outer, const Angle 
   };
   const IconLook &icon_look = UIGlobals::GetIconLook();
   const MaskedIcon *icon_bearing = nullptr;
-  int direction = 0;
+  BearingDirection direction = BearingDirection::None;
   if (bearing.AsDelta().Degrees() > fixed(first)) {
     if (bearing.AsDelta().Degrees() > fixed(fourth))
       icon_bearing = &icon_look.hBmpBearingRightFour;
@@ -467,7 +492,7 @@ SliderShape::DrawBearing(Canvas &canvas, const PixelRect &rc_outer, const Angle 
       icon_bearing = &icon_look.hBmpBearingRightTwo;
     else
       icon_bearing = &icon_look.hBmpBearingRightOne;
-    direction = 1;
+    direction = BearingDirection::Right;
   }
 
   if (bearing.AsDelta().Degrees() < fixed(-first)) {
@@ -479,16 +504,16 @@ SliderShape::DrawBearing(Canvas &canvas, const PixelRect &rc_outer, const Angle 
       icon_bearing = &icon_look.hBmpBearingLeftTwo;
     else
       icon_bearing = &icon_look.hBmpBearingLeftOne;
-    direction = -1;
+    direction = BearingDirection::Left;
   }
 
-  if (direction == 0)
-    return 0;
+  if (direction == BearingDirection::None)
+    return direction;
 
   PixelSize icon_bearing_size = icon_bearing->GetSize();
   const PixelScalar vert_margin = points[2].y - icon_bearing_size.cy / 2;
 
-  UPixelScalar x_offset = (direction == -1) ? 1 :
+  UPixelScalar x_offset = (direction == BearingDirection::Left) ? 1 :
       GetWidth() - icon_bearing_size.cx;
 
   RasterPoint upper_left(rc_outer.left + x_offset, vert_margin);
