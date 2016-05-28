@@ -227,9 +227,6 @@ GlueMapWindow::DrawTaskNavSliderShape(Canvas &canvas)
     }
 
   }
-  const GlideResult &result2 = (task_mode == TaskType::ORDERED) ?
-      Calculated().task_stats.glide_results[idx] :
-      Calculated().task_stats.glide_result_goto;
 
   const TerrainRendererSettings &terrain = GetMapSettings().terrain;
   bool use_wide_pen = !terrain.enable;
@@ -243,6 +240,7 @@ GlueMapWindow::DrawTaskNavSliderShape(Canvas &canvas)
   if (task_factory_type == TaskFactoryType::AAT &&
       ui_settings.navbar_navigate_to_aat_target &&
       task_mode == TaskType::ORDERED) {
+
     slider_shape.Draw(canvas, outer_rect,
                       idx, false, false,
                       wp_name.c_str(),
@@ -263,6 +261,9 @@ GlueMapWindow::DrawTaskNavSliderShape(Canvas &canvas)
                       true);
 
   } else {
+    fixed gradient = ::CalculateGradient(*wp, distance,
+                                         Basic(), CommonInterface::GetComputerSettings().task.safety_height_arrival_gr);
+
     slider_shape.Draw(canvas, outer_rect,
                       idx, false, false,
                       wp_name.c_str(),
@@ -275,8 +276,8 @@ GlueMapWindow::DrawTaskNavSliderShape(Canvas &canvas)
                       altitude_difference_valid,
                       bearing,
                       bearing_valid,
-                      ::AngleToGradient(result2.DestinationAngleGround()),
-                      result2.IsOk(),
+                      gradient,
+                      ::GradientValid(gradient),
                       use_wide_pen,
                       false);
   }
