@@ -86,6 +86,11 @@ CAI302UnitsEditor::Prepare(ContainerWindow &parent, const PixelRect &rc)
   };
   AddEnum(_("Sink tone"), NULL, sink_tone_list,
           data.GetSinkTone());
+
+  AddInteger(_("Enroute logger interval"), NULL, _T("%d s"), _T("%d"), 1, 15, 1, data.GetEnrouteLoggingInterval());
+
+  AddInteger(_("Close logger interval"), NULL, _T("%d s"), _T("%d"), 1, 15, 1, data.GetCloseLoggingInterval());
+
 }
 
 bool
@@ -132,6 +137,18 @@ CAI302UnitsEditor::Save(bool &_changed)
   unsigned sink_tone = data.GetSinkTone();
   if (SaveValue(SinkTone, sink_tone)) {
     data.SetSinkTone(sink_tone);
+    changed = true;
+  }
+
+  unsigned enroute_logging_interval = data.GetEnrouteLoggingInterval();
+  if (SaveValue(EnrouteLoggingInterval, enroute_logging_interval)) {
+    data.SetEnrouteLoggingInterval(enroute_logging_interval);
+    changed = true;
+  }
+
+  unsigned close_logging_interval = data.GetCloseLoggingInterval();
+  if (SaveValue(CloseLoggingInterval, enroute_logging_interval)) {
+    data.SetCloseLoggingInterval(close_logging_interval);
     changed = true;
   }
 

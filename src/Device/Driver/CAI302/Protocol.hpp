@@ -253,6 +253,24 @@ namespace CAI302 {
     void SetSinkTone(unsigned v) {
       sink_tone = v;
     }
+
+    unsigned GetEnrouteLoggingInterval() const {
+      return enroute_logging_interval;
+    }
+
+    void SetEnrouteLoggingInterval(unsigned v) {
+      enroute_logging_interval = v;
+    }
+
+    unsigned GetCloseLoggingInterval() const {
+      return close_logging_interval;
+    }
+
+    void SetCloseLoggingInterval(unsigned v) {
+      close_logging_interval = v;
+    }
+
+
   } gcc_packed;
 
   /** Structure for CAI302 device info */
