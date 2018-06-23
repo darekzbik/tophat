@@ -29,6 +29,7 @@ Copyright_License {
 #include "Compiler.h"
 
 #include <cstddef>
+#include <cstdint>
 
 class RasterBuffer : private NonCopyable {
 public:
