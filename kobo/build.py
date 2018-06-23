@@ -235,8 +235,8 @@ class FreeTypeProject(AutotoolsProject):
 # a list of third-party libraries to be used by XCSoar
 thirdparty_libs = [
     ZlibProject(
-        'http://zlib.net/zlib-1.2.8.tar.xz',
-        '28f1205d8dd2001f26fec1e8c2cebe37',
+        'https://sunsite.icm.edu.pl/pub/Linux/slackware/slackware64-14.2/source/l/zlib/zlib-1.2.8.tar.xz',
+        '55e282b1440ca91d9d5f5aaf96780046',
         'lib/libz.a',
     ),
 
@@ -275,7 +275,7 @@ thirdparty_libs = [
     ),
 
     AutotoolsProject(
-        'http://sourceforge.net/projects/libpng/files/libpng16/1.6.21/libpng-1.6.21.tar.xz',
+        'https://sourceforge.net/projects/libpng/files/libpng16/older-releases/1.6.21/libpng-1.6.21.tar.xz',
         '3bacb4728f6694a64ad9052769d6a4ce',
         'lib/libpng.a',
         [
