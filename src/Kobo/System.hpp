@@ -62,6 +62,9 @@ void
 KoboRunXCSoar(const char *mode);
 
 void
+KoboRunTestApp();
+
+void
 KoboRunTelnetd();
 
 /**

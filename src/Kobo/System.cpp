@@ -233,6 +233,14 @@ KoboRunXCSoar(const char *mode)
 }
 
 void
+KoboRunTestApp()
+{
+#ifdef KOBO
+    Run("/mnt/onboard/XCSoarData/kobo/tophat-test");
+#endif
+}
+
+void
 KoboRunTelnetd()
 {
 #ifdef KOBO

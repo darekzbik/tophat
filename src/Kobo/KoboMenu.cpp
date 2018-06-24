@@ -55,7 +55,8 @@ enum Buttons {
   LAUNCH_NICKEL = 100,
   NETWORK,
   REBOOT,
-  POWEROFF
+  POWEROFF,
+  LAUNCH_TEST
 };
 
 static DialogSettings dialog_settings;
@@ -158,6 +159,9 @@ void
 KoboMenuWidget::CreateButtons(WidgetDialog &buttons)
 {
   buttons.AddButton(("PC connect"), *this, LAUNCH_NICKEL);
+  if(File::Exists(_T("/mnt/onboard/XCSoarData/kobo/tophat-test"))) {
+    buttons.AddButton(("Test"), *this, LAUNCH_TEST);
+  }
   wifi_button = (WndSymbolButton*)buttons.AddSymbolButton("Wifi", *this, NETWORK);
   wifi_button->SetPrefixIcon(SymbolButtonRenderer::NONE);
   poweroff_button = buttons.AddButton(GetPowerOffCaption(false), *this, POWEROFF);
@@ -238,6 +242,9 @@ KoboMenuWidget::OnAction(int id)
           "Do not use the 'Wireless setup' option.  You cannot use the Kobo as an Book reader.  Doing so will break Top Hat!"), _("Warning!"),
                          MB_OKCANCEL | MB_ICONWARNING) != IDCANCEL)
         dialog.OnAction(LAUNCH_NICKEL);
+    break;
+  case LAUNCH_TEST:
+      dialog.OnAction(LAUNCH_TEST);
   }
 }
 
@@ -349,6 +356,11 @@ int main(int argc, char **argv)
 
     case SimulatorPromptWindow::SIMULATOR:
       KoboRunXCSoar("-simulator");
+      /* return to menu after XCSoar quits */
+      break;
+
+    case LAUNCH_TEST:
+      KoboRunTestApp();
       /* return to menu after XCSoar quits */
       break;
 
